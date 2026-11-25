@@ -1,0 +1,40 @@
+/* Shared tokens for the display, referee, connect and admin pages.
+   The font comes from node_modules/@fontsource, so it works with no internet. */
+:root {
+  --night: #0B1033;      /* orbit night: the sky */
+  --night-2: #151D52;    /* panels */
+  --night-3: #222C6E;    /* raised panels, borders */
+  --star: #EEF2FF;       /* starlight: main text */
+  --dim: #A3ACD6;        /* secondary text */
+  --p1: #4F8BFF;         /* signal blue (Player 1), mid lightness */
+  --p2: #FFC15C;         /* thruster amber (Player 2), clearly lighter */
+  --alarm: #FF4D6A;      /* collisions, failures, focus warning */
+  --dock: #7DFFB2;       /* docked, success */
+  --font-en: 'Chakra Petch', 'Segoe UI', system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--night);
+  color: var(--star);
+  font-family: var(--font-en);
+  -webkit-text-size-adjust: 100%;
+}
+
+button { font: inherit; color: inherit; }
+
+:focus-visible {
+  outline: 3px solid var(--star);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

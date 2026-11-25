@@ -1,0 +1,7 @@
+node_modules/
+# Race results and the referee key are event data, not code.
+data/
+*.tmp
+__pycache__/
+# Shortcuts hold full paths for one laptop; make them with launcher/make_shortcut.ps1
+*.lnk

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mission: Return to Station</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22%230B1033%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%226%22 fill=%22%234F8BFF%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2211%22 fill=%22none%22 stroke=%22%23FFC15C%22 stroke-width=%222%22/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/vendor/chakra-petch/latin-500.css">
+  <link rel="stylesheet" href="/vendor/chakra-petch/latin-700.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/display.css">
+</head>
+<body class="display">
+  <main id="stage" data-phase="idle">
+    <canvas id="scene" aria-hidden="true"></canvas>
+
+    <section class="half" id="half1" data-player="1" aria-live="polite"></section>
+    <section class="half" id="half2" data-player="2" aria-live="polite"></section>
+
+    <header id="title">
+      <img id="logo" alt="" hidden>
+      <h1>Mission: Return to Station</h1>
+      <p class="tagline">Outrun the black hole</p>
+    </header>
+
+    <div id="countdown" aria-live="assertive"><div class="num"></div><div class="sub"></div></div>
+    <div id="notice" role="alert"><p class="msg"></p><p class="help"></p></div>
+
+    <section id="lobby">
+      <h2 class="lb-title"></h2>
+      <p class="lb-rule"></p>
+      <table id="leaderboard">
+        <thead><tr><th class="rank"></th><th class="c-name"></th><th class="c-score"></th><th class="c-time"></th><th class="c-shields"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <p class="lb-empty"></p>
+      <figure id="fact">
+        <figcaption class="fact-label"></figcaption>
+        <blockquote><p class="fact-text"></p></blockquote>
+        <p class="fact-source"></p>
+      </figure>
+      <p class="waiting"></p>
+    </section>
+
+    <div id="focusOverlay" role="alert" hidden>
+      <p class="big"></p>
+    </div>
+    <div id="serverOverlay" role="alert" hidden><p></p></div>
+
+    <aside id="debug" hidden>
+      <h2>Debug (F2)</h2>
+      <section class="test-pad" aria-label="Test the race without the boards">
+        <p>Test without the boards: these send the same inputs as the Pro Micro (or press the keys shown).</p>
+        <div class="test-row" data-player="1"></div>
+        <div class="test-row" data-player="2"></div>
+      </section>
+      <pre id="debugText"></pre>
+    </aside>
+  </main>
+
+  <template id="halfTemplate">
+    <div class="half-inner">
+      <header class="who">
+        <p class="tag"></p>
+        <h2 class="name"></h2>
+      </header>
+      <div class="alert"></div>
+      <div class="verdict">
+        <p class="v-main"></p>
+        <p class="v-score"></p>
+        <p class="v-detail"></p>
+      </div>
+      <div class="lower">
+        <div class="lobby-info">
+          <p class="idle-status"></p>
+          <p class="pad"></p>
+          <p class="ref"></p>
+        </div>
+        <footer class="gauges">
+          <div class="top-row">
+            <p class="status"></p>
+            <p class="score"><span class="score-num"></span><span class="score-label"></span></p>
+          </div>
+          <div class="fuel">
+            <div class="fuel-label"></div>
+            <div class="bar"><div class="fill"></div></div>
+            <div class="fuel-sec"></div>
+          </div>
+          <div class="meta">
+            <div class="shield-row" role="img"></div>
+            <p class="hits"></p>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </template>
+
+  <script type="module" src="/js/display.js"></script>
+</body>
+</html>

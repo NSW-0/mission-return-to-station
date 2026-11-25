@@ -1,0 +1,46 @@
+{
+  "fuelSeconds": 60,
+  "shields": 3,
+  "hitCooldownMs": 1000,
+  "countdownSeconds": 3,
+  "resultSeconds": 3,
+  "pointsPerSecond": 10,
+  "pointsPerShield": 100,
+  "falseStartSeconds": 4,
+  "port": 3000,
+  "hostOverride": "",
+  "requireRefKey": true,
+  "refTestButtons": true,
+  "colors": {
+    "p1": "#4F8BFF",
+    "p2": "#FFC15C"
+  },
+  "keys": {
+    "p1": {
+      "hit": "KeyQ",
+      "dock": "KeyW",
+      "padOn": "KeyE",
+      "padOff": "KeyR"
+    },
+    "p2": {
+      "hit": "KeyU",
+      "dock": "KeyI",
+      "padOn": "KeyO",
+      "padOff": "KeyP"
+    }
+  },
+  "facts": [
+    {
+      "text": "About 40,000 objects in orbit are tracked, and over 1.2 million pieces of debris larger than 1 cm are estimated to be up there.",
+      "source": "ESA Space Environment Report 2025"
+    },
+    {
+      "text": "Debris moves so fast that a 1 cm fragment can hit with the energy of a small car at 40 km/h.",
+      "source": "ESA"
+    },
+    {
+      "text": "By November 2024 the International Space Station had moved 39 times to dodge debris.",
+      "source": "NASA"
+    }
+  ]
+}

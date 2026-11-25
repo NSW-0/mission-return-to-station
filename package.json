@@ -1,0 +1,20 @@
+{
+  "name": "mission-return-to-station",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Two-player buzz wire race display, referee phones and admin for Mission: Return to Station",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node --test test/game.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@fontsource/chakra-petch": "^5.3.0",
+    "express": "^4.22.3",
+    "qrcode": "^1.5.4",
+    "ws": "^8.23.0"
+  }
+}

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin: Mission: Return to Station</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22%230B1033%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%226%22 fill=%22%234F8BFF%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2211%22 fill=%22none%22 stroke=%22%23FFC15C%22 stroke-width=%222%22/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/vendor/chakra-petch/latin-500.css">
+  <link rel="stylesheet" href="/vendor/chakra-petch/latin-700.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin">
+  <header class="top">
+    <h1>Mission control: admin</h1>
+    <p>Changes apply from the next round. This page only opens on the game laptop.</p>
+  </header>
+
+  <main>
+    <section class="panel" id="links">
+      <h2>Pages</h2>
+      <p><a href="/connect" target="_blank">Connect page</a>: the two referee QR codes. Scan once at the start of the event.</p>
+      <p>Display page: <a id="urlDisplay" target="_blank"></a></p>
+      <p class="hint">Phones must be on the same Wi-Fi as this laptop. If they cannot open the link, turn on this laptop's mobile hotspot (or a phone hotspot), connect everything to it, then pick the right address under Network below and save.</p>
+    </section>
+
+    <form class="panel" id="settings" autocomplete="off">
+      <h2>Race settings</h2>
+      <div class="grid">
+        <label>Fuel (seconds)<input name="fuelSeconds" type="number" min="5" max="600" step="1"></label>
+        <label>Shields<input name="shields" type="number" min="1" max="9" step="1"></label>
+        <label>Hit cooldown (ms)<input name="hitCooldownMs" type="number" min="0" max="10000" step="50"></label>
+        <label>Countdown (seconds)<input name="countdownSeconds" type="number" min="1" max="10" step="1"></label>
+        <label>Result screen (seconds)<input name="resultSeconds" type="number" min="1" max="120" step="1"></label>
+        <label>False start message (seconds)<input name="falseStartSeconds" type="number" min="1" max="30" step="1"></label>
+      </div>
+
+      <h3>Score</h3>
+      <p class="hint">Only a docked run scores. Score = seconds of fuel left × points per second + shields left × points per shield. In a race of two, the higher score wins.</p>
+      <div class="grid">
+        <label>Points per second of fuel left<input name="pointsPerSecond" type="number" min="0" max="1000" step="1"></label>
+        <label>Points per shield left<input name="pointsPerShield" type="number" min="0" max="10000" step="10"></label>
+        <p class="hint" id="scoreExample"></p>
+      </div>
+
+      <h3>Network</h3>
+      <div class="grid">
+        <label>Address for phones
+          <select name="hostOverride" id="hostSelect"></select>
+        </label>
+        <label class="check"><input name="requireRefKey" type="checkbox"> Referee links need the key (stops the audience taking control)</label>
+        <label class="check"><input name="refTestButtons" type="checkbox"> Test hit button on referee phones (turn off for the event)</label>
+      </div>
+
+      <h3>Player colours</h3>
+      <p class="hint">Keep Player 1 darker and Player 2 lighter so the halves differ for colour-blind viewers and on a washed-out projector.</p>
+      <div class="grid">
+        <label>Player 1<input name="color_p1" type="color"></label>
+        <label>Player 2<input name="color_p2" type="color"></label>
+      </div>
+
+      <h3>Key map</h3>
+      <p class="hint">KeyboardEvent.code values sent by the Pro Micro (for example KeyQ). Change these only if you also change the firmware. Enter, Backspace, F and F2 are reserved for the laptop.</p>
+      <table class="keys">
+        <thead><tr><th></th><th>Hit (track)</th><th>Docked</th><th>Loop on start pad</th><th>Loop left start pad</th></tr></thead>
+        <tbody>
+          <tr><th>Player 1</th><td><input name="k_p1_hit"></td><td><input name="k_p1_dock"></td><td><input name="k_p1_padOn"></td><td><input name="k_p1_padOff"></td></tr>
+          <tr><th>Player 2</th><td><input name="k_p2_hit"></td><td><input name="k_p2_dock"></td><td><input name="k_p2_padOn"></td><td><input name="k_p2_padOff"></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Space facts for the idle screen</h3>
+      <p class="hint">Only add facts with a source.</p>
+      <div id="facts"></div>
+      <button type="button" class="ghost" id="addFact">Add a fact</button>
+
+      <div class="actions">
+        <button type="submit" class="primary">Save settings</button>
+        <p id="saveMsg" role="status"></p>
+      </div>
+    </form>
+
+    <section class="panel" id="results">
+      <h2>Results</h2>
+      <div class="actions">
+        <a class="button" href="/api/export.csv">Export all races to CSV</a>
+        <button type="button" class="danger" id="clearBoard">Reset scores</button>
+        <p id="resultsMsg" role="status"></p>
+      </div>
+      <h3>Leaderboard (top 10)</h3>
+      <table class="data" id="boardTable"><thead><tr><th>#</th><th>Name</th><th>Score</th><th>Time</th><th>Shields left</th><th>Side</th><th>Race</th></tr></thead><tbody></tbody></table>
+      <h3>Recent races</h3>
+      <table class="data" id="raceTable"><thead><tr><th>Race</th><th>Mode</th><th>Players</th><th>Outcome</th></tr></thead><tbody></tbody></table>
+    </section>
+  </main>
+
+  <template id="factTemplate">
+    <fieldset class="fact">
+      <label>Fact<textarea name="text" rows="2"></textarea></label>
+      <label>Source<input name="source"></label>
+      <button type="button" class="ghost remove">Remove</button>
+    </fieldset>
+  </template>
+
+  <script type="module" src="/js/admin.js"></script>
+</body>
+</html>

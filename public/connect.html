@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Connect: Mission: Return to Station</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22%230B1033%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%226%22 fill=%22%234F8BFF%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2211%22 fill=%22none%22 stroke=%22%23FFC15C%22 stroke-width=%222%22/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/vendor/chakra-petch/latin-500.css">
+  <link rel="stylesheet" href="/vendor/chakra-petch/latin-700.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/connect.css">
+</head>
+<body class="connect">
+  <header>
+    <h1>Connect the referee phones</h1>
+    <p>Keep this tab open next to the game display tab. Scan each code once with the referee's phone camera; the phones stay connected and reconnect by themselves. If a phone loses its page later, come back to this tab and scan again.</p>
+  </header>
+
+  <main class="cards">
+    <section class="card" data-player="1">
+      <h2>Player 1 referee</h2>
+      <img class="qr" alt="QR code for the Player 1 referee page">
+      <p class="url"></p>
+      <p class="state" data-on="false"><span class="led" aria-hidden="true"></span><span class="label">Waiting for the phone…</span></p>
+    </section>
+    <section class="card" data-player="2">
+      <h2>Player 2 referee</h2>
+      <img class="qr" alt="QR code for the Player 2 referee page">
+      <p class="url"></p>
+      <p class="state" data-on="false"><span class="led" aria-hidden="true"></span><span class="label">Waiting for the phone…</span></p>
+    </section>
+  </main>
+
+  <footer>
+    <p class="display-state" data-on="false"><span class="led" aria-hidden="true"></span><span class="label">Game display tab is not open</span></p>
+    <a class="go" href="/" target="mrs-display">Open the game display tab</a>
+    <div class="scores">
+      <button type="button" class="reset-scores">Reset scores</button>
+      <span class="scores-msg" role="status"></span>
+    </div>
+    <p class="help">Phone cannot open the page? It must be on the same Wi-Fi as this laptop. Venue Wi-Fi often blocks this: turn on this laptop's mobile hotspot, connect the phones to it, then pick the hotspot address on the <a href="/admin">admin page</a>.</p>
+  </footer>
+
+  <script type="module" src="/js/connect.js"></script>
+</body>
+</html>
