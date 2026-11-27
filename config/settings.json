@@ -12,8 +12,8 @@
   "requireRefKey": true,
   "refTestButtons": true,
   "colors": {
-    "p1": "#4F8BFF",
-    "p2": "#FFC15C"
+    "p1": "#4f8bff",
+    "p2": "#ff5c5c"
   },
   "keys": {
     "p1": {

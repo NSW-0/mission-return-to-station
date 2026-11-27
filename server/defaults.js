@@ -21,7 +21,7 @@ module.exports = {
   refTestButtons: true,
   colors: {
     p1: '#4F8BFF', // signal blue: mid lightness
-    p2: '#FFC15C', // thruster amber: clearly lighter, so the halves differ for colour-blind viewers too
+    p2: '#FF5C5C', // signal red: warm against P1's cool blue, so the halves differ for colour-blind viewers too
   },
   // KeyboardEvent.code values sent by the Arduino Pro Micro. Must match the firmware.
   keys: {

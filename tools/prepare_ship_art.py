@@ -8,7 +8,7 @@ public/assets/ship/:
   p1_shield1.png  no shield        (last shield)
   p1_broken.png   damaged ship     (shields down)
   p1_winner.png   laurel ship      (docked)
-  p2_*.png        the same set, recoloured from blue to amber for Player 2
+  p2_*.png        the same set, recoloured from blue to red for Player 2
 
 All five images are cropped to the same box so the ship does not jump when the
 state changes. Run again after replacing any source image:
@@ -34,19 +34,20 @@ STATES = {
 }
 
 
-def blue_to_amber(img: Image.Image) -> Image.Image:
-    """Shift blue and cyan hues to amber. Greys, whites and gold stay as they are."""
+def blue_to_red(img: Image.Image) -> Image.Image:
+    """Shift blue and cyan hues to red. Greys, whites and gold stay as they are."""
     rgba = np.asarray(img).astype(np.float32) / 255.0
     rgb, alpha = rgba[..., :3], rgba[..., 3:]
     hsv = np.asarray(Image.fromarray((rgb * 255).astype(np.uint8)).convert("HSV")).astype(np.float32)
     hue = hsv[..., 0] * 360.0 / 255.0
     sat = hsv[..., 1] / 255.0
     mask = (hue >= 150) & (hue <= 275) & (sat > 0.12)
-    # Squeeze 150..275 degrees into 22..48 degrees (orange to amber).
-    new_hue = 22 + (np.clip(hue, 150, 275) - 150) / 125.0 * 26
+    # Squeeze 150..275 degrees into 0..12 degrees (red, leaning slightly warm), so the
+    # shield keeps its light-to-dark shading but reads as one red.
+    new_hue = (np.clip(hue, 150, 275) - 150) / 125.0 * 12
     hsv[..., 0] = np.where(mask, new_hue * 255.0 / 360.0, hsv[..., 0])
-    # Amber reads lighter than blue: lift the value a little so P2 also differs in lightness.
-    hsv[..., 2] = np.where(mask, np.minimum(255, hsv[..., 2] * 1.12 + 10), hsv[..., 2])
+    # Red reads darker than blue on a projector: lift the value a little to match.
+    hsv[..., 2] = np.where(mask, np.minimum(255, hsv[..., 2] * 1.1 + 12), hsv[..., 2])
     out_rgb = Image.fromarray(hsv.astype(np.uint8), "HSV").convert("RGB")
     out = np.concatenate([np.asarray(out_rgb).astype(np.float32) / 255.0, alpha], axis=-1)
     return Image.fromarray((out * 255).astype(np.uint8), "RGBA")
@@ -66,7 +67,7 @@ def main() -> None:
     for name, im in images.items():
         small = im.crop(box).resize((SIZE, SIZE), Image.LANCZOS)
         small.save(OUT / f"p1_{name}.png", optimize=True)
-        blue_to_amber(small).save(OUT / f"p2_{name}.png", optimize=True)
+        blue_to_red(small).save(OUT / f"p2_{name}.png", optimize=True)
         print("wrote", f"p1_{name}.png", f"p2_{name}.png")
 
 

@@ -7,7 +7,7 @@
   --star: #EEF2FF;       /* starlight: main text */
   --dim: #A3ACD6;        /* secondary text */
   --p1: #4F8BFF;         /* signal blue (Player 1), mid lightness */
-  --p2: #FFC15C;         /* thruster amber (Player 2), clearly lighter */
+  --p2: #FF5C5C;         /* signal red (Player 2) */
   --alarm: #FF4D6A;      /* collisions, failures, focus warning */
   --dock: #7DFFB2;       /* docked, success */
   --font-en: 'Chakra Petch', 'Segoe UI', system-ui, sans-serif;
