@@ -19,7 +19,7 @@ const STAR_LAYERS = [
 const IMPACT_APPROACH_MS = 90;
 // The bright ring's radius as a fraction of the black hole picture's width
 // (see tools/prepare_blackhole.py).
-const RING_FRACTION = 0.2875;
+const RING_FRACTION = 0.25;
 
 function rand(a, b) { return a + Math.random() * (b - a); }
 
@@ -135,11 +135,11 @@ export class Scene {
     c.width = hw;
     c.height = this.h;
     const g = c.getContext('2d');
-    g.fillStyle = '#0B1033';
+    g.fillStyle = '#060818';
     g.fillRect(0, 0, hw, this.h);
     const [r, gg, b] = hexToRgb(this.colors[`p${id}`]);
     // Two soft nebula clouds in the player's colour, very faint.
-    for (const [x, y, rad, a] of [[0.15, 0.25, 0.7, 0.16], [0.85, 0.85, 0.6, 0.1]]) {
+    for (const [x, y, rad, a] of [[0.15, 0.25, 0.7, 0.09], [0.85, 0.85, 0.6, 0.06]]) {
       const grad = g.createRadialGradient(hw * x, this.h * y, 0, hw * x, this.h * y, this.h * rad);
       grad.addColorStop(0, `rgba(${r},${gg},${b},${a})`);
       grad.addColorStop(1, `rgba(${r},${gg},${b},0)`);
@@ -148,7 +148,7 @@ export class Scene {
     }
     const vignette = g.createRadialGradient(hw / 2, this.h / 2, this.h * 0.3, hw / 2, this.h / 2, this.h);
     vignette.addColorStop(0, 'rgba(4,6,20,0)');
-    vignette.addColorStop(1, 'rgba(4,6,20,0.65)');
+    vignette.addColorStop(1, 'rgba(2,3,10,0.85)');
     g.fillStyle = vignette;
     g.fillRect(0, 0, hw, this.h);
     this.bgCache[id] = c;
@@ -278,11 +278,13 @@ export class Scene {
     if (phase === 'countdown') return hw * 0.3;
     if (p.status === 'docked') return hw * 0.14;   // escaped: it falls away behind
     if (p.status === 'outOfFuel') return hw * 1.7; // swallowed
-    // Grows faster and faster as the fuel runs out; frozen when shields go down.
+    // Grows continuously, every frame, from GO until the fuel runs out (no steps).
+    // It is driven by the fraction of fuel used, so it fills the whole race whatever
+    // the fuel time is set to. Frozen when shields go down.
     const fuel = s.fuelMs || 60000;
     const elapsed = p.doneAt != null ? p.lastedMs : this.clock() - s.goAt;
     const progress = Math.max(0, Math.min(1, elapsed / fuel));
-    return hw * (0.3 + 0.95 * progress ** 1.7);
+    return hw * (0.3 + 0.95 * progress ** 1.3);
   }
 
   drawBlackHole(g, half, hw, dt) {

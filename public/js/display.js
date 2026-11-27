@@ -21,6 +21,7 @@ let leaderboard = [];
 let clients = [];
 let lastLeaderboardJson = '';
 let freshRaceId = null;
+let scrollToFresh = false; // see revealFreshRow()
 let lastCountdownNum = null;
 let factIndex = 0;
 let linkOpen = false;
@@ -300,6 +301,7 @@ function render() {
   } else notice.classList.remove('show');
 
   renderLeaderboard();
+  if (lobby) revealFreshRow();
   if (!$('#debug').hidden) renderDebug();
 }
 
@@ -343,8 +345,28 @@ function renderLeaderboard() {
     });
     tbody.append(tr);
   });
-  $('#leaderboard').style.display = leaderboard.length ? '' : 'none';
+  $('.lb-scroll').style.display = leaderboard.length ? '' : 'none';
   $('.lb-empty').style.display = leaderboard.length ? 'none' : '';
+  scrollToFresh = true;
+}
+
+/**
+ * A run that just made the list may be below the fold: scroll the list to it once
+ * the lobby is on screen (it is hidden while the result shows). Only the list box
+ * scrolls; scrollIntoView could also shift the whole stage.
+ */
+function revealFreshRow() {
+  const box = $('.lb-scroll');
+  if (!scrollToFresh || !box.clientHeight) return;
+  scrollToFresh = false;
+  const fresh = box.querySelector('tr.fresh');
+  if (!fresh) return;
+  const head = $('#leaderboard thead').offsetHeight;
+  if (fresh.offsetTop + fresh.offsetHeight > box.scrollTop + box.clientHeight) {
+    box.scrollTop = fresh.offsetTop + fresh.offsetHeight - box.clientHeight;
+  } else if (fresh.offsetTop - head < box.scrollTop) {
+    box.scrollTop = fresh.offsetTop - head;
+  }
 }
 
 function showFact(animate) {

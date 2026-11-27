@@ -1,6 +1,6 @@
 """Prepare the black hole art for the game.
 
-Reads art/blackhole_source.png (the full wallpaper) and writes
+Reads art/blackhole_pixel_source.png (the pixel-art wallpaper) and writes
 public/assets/blackhole.png: a square cut-out centred on the black hole, with the
 edges faded to transparent so it blends into the star field, flipped so the
 accretion disk sweeps to the right (the game draws it at the left edge of Player 1's
@@ -17,12 +17,12 @@ import numpy as np
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "art" / "blackhole_source.png"
+SRC = ROOT / "art" / "blackhole_pixel_source.png"
 OUT = ROOT / "public" / "assets" / "blackhole.png"
 
-HOLE_CENTER = (3433, 1214)  # centre of the dark core in the source picture
-RING_RADIUS = 1150          # outer edge of the bright ring, in source pixels
-HALF = 2000                 # half the size of the square cut-out, in source pixels
+HOLE_CENTER = (2470, 810)   # centre of the dark core in the source picture
+RING_RADIUS = 650           # outer edge of the bright ring, in source pixels
+HALF = 1300                 # half the size of the square cut-out, in source pixels
 SIZE = 1400                 # output size in pixels
 
 
@@ -41,7 +41,11 @@ def main() -> None:
     # The ring almost touches the top and bottom of the source picture: fade those
     # edges too, so no straight line shows.
     top, bottom = HALF - cy, HALF - cy + src.height
+    # The hole also sits close to the picture's right edge (off screen in the game,
+    # but faded anyway so a straight line can never show).
+    left, right = HALF - cx, HALF - cx + src.width
     edge = np.clip((yy - top) / 260, 0, 1) * np.clip((bottom - yy) / 260, 0, 1)
+    edge = edge * np.clip((xx - left) / 160, 0, 1) * np.clip((right - xx) / 160, 0, 1)
     edge = edge * edge * (3 - 2 * edge)
     arr = np.asarray(square).astype(np.float32)
     arr[..., 3] = arr[..., 3] * fade * edge
