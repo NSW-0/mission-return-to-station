@@ -289,6 +289,8 @@ the text can be read from the back of the room.
 | Start solo race is greyed out | Press **Ready** first. |
 | A hit did not happen | The referee presses **Undo hit**. |
 | Docking pad did not register | The referee taps **Finish**. |
+| Clicked the shortcut but the game was already running | Nothing breaks: it opens the running game's Connect tab and closes. Only one copy of the game can run at a time. |
+| "Port 3000 is used by another program" | Another program has taken port 3000. Close it, or start with `set PORT=3001 && npm start`. |
 | Display shows "Lost contact with the game server" | The black server window was closed. Run `npm start` again. The race state and results are kept. |
 
 ## 8. For developers

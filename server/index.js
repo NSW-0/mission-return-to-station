@@ -290,15 +290,39 @@ setInterval(() => {
   }
 }, 10000);
 
+// The WebSocket server repeats the HTTP server's errors; they are handled just below.
+wss.on('error', () => {});
+
 server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.error(`\n! Port ${port} is already in use. Is the game already running in another window?`);
-    console.error('  Close it, or start on another port:  set PORT=3001 && npm start\n');
-  } else {
+  if (err.code !== 'EADDRINUSE') {
     console.error(err);
+    process.exit(1);
   }
-  process.exit(1);
+  // Port taken. Usually the game is already running (the shortcut was clicked twice):
+  // then just bring up its Connect tab instead of failing.
+  const probe = http.get({ host: '127.0.0.1', port, path: '/api/assets', timeout: 2000 }, (res) => {
+    let body = '';
+    res.on('data', (d) => { body += d; });
+    res.on('end', () => {
+      let ours = false;
+      try { ours = Array.isArray(JSON.parse(body).files); } catch { /* not our game */ }
+      if (!ours) return portTaken();
+      console.log('\n  The game is already running in another window. Opening its Connect tab.');
+      console.log('  (The Connect tab shows whether the display tab is open, and can open it.)\n');
+      const noOpen = process.argv.includes('--no-open') || process.env.MRS_NO_OPEN === '1';
+      if (!noOpen) openTab(`http://localhost:${port}/connect`);
+      setTimeout(() => process.exit(0), 1500);
+    });
+  });
+  probe.on('timeout', () => probe.destroy());
+  probe.on('error', portTaken);
 });
+
+function portTaken() {
+  console.error(`\n! Port ${port} is used by another program, so the game cannot start.`);
+  console.error('  Close that program, or start the game on another port:  set PORT=3001 && npm start\n');
+  process.exit(1);
+}
 
 // No host given: Node listens on IPv6 and IPv4 together. Listening on 0.0.0.0 only
 // made every "localhost" request on Windows wait ~2 s for IPv6 to fail first.

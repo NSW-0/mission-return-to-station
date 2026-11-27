@@ -17,4 +17,5 @@ if not exist node_modules (
   )
 )
 node server\index.js
-pause
+rem Keep the window open only if something went wrong, so the message can be read.
+if errorlevel 1 pause
